@@ -1,0 +1,14 @@
+{
+  "name": "algoforge",
+  "version": "1.0.0",
+  "description": "Open-source interactive algorithm laboratory — runs entirely in the browser.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node tests/run-node.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "engines": { "node": ">=18" }
+}

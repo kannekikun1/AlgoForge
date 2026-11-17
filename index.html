@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; worker-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="AlgoForge — an open-source, fully client-side laboratory for exploring, visualizing, benchmarking and stress-testing graph algorithms.">
+  <meta name="color-scheme" content="dark light">
+  <title>AlgoForge — Interactive Algorithm Laboratory</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/canvas.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="topbar" role="banner">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
+        <circle cx="7" cy="8" r="4"></circle><circle cx="25" cy="8" r="4"></circle><circle cx="16" cy="25" r="4"></circle>
+        <path d="M10.5 9.5 L13.5 22 M21.5 9.5 L18.5 22 M11 8 H21"></path>
+      </svg>
+      <span class="brand-name">AlgoForge</span>
+      <span class="brand-version" title="Version">v1.0</span>
+    </div>
+
+    <nav class="views-nav" aria-label="Workspace">
+      <div role="tablist" id="view-tabs" aria-label="Workspace selector">
+        <button role="tab" id="tab-editor" aria-controls="view-workspace" data-view="editor" aria-selected="true">Editor</button>
+        <button role="tab" id="tab-debugger" aria-controls="view-workspace" data-view="debugger" aria-selected="false" tabindex="-1">Debugger</button>
+        <button role="tab" id="tab-race" aria-controls="view-race" data-view="race" aria-selected="false" tabindex="-1">Race</button>
+        <button role="tab" id="tab-discovery" aria-controls="view-discovery" data-view="discovery" aria-selected="false" tabindex="-1">Discovery</button>
+        <button role="tab" id="tab-complexity" aria-controls="view-complexity" data-view="complexity" aria-selected="false" tabindex="-1">Complexity</button>
+        <button role="tab" id="tab-saved" aria-controls="view-saved" data-view="saved" aria-selected="false" tabindex="-1">Saved</button>
+        <button role="tab" id="tab-help" aria-controls="view-help" data-view="help" aria-selected="false" tabindex="-1">Help</button>
+      </div>
+      <label class="views-select-wrap">
+        <span class="visually-hidden">Workspace</span>
+        <select id="view-select" class="views-select" aria-label="Workspace selector">
+          <option value="editor">Editor</option>
+          <option value="debugger">Debugger</option>
+          <option value="race">Race</option>
+          <option value="discovery">Discovery</option>
+          <option value="complexity">Complexity</option>
+          <option value="saved">Saved</option>
+          <option value="help">Help</option>
+        </select>
+      </label>
+    </nav>
+
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" id="btn-import" type="button" title="Import graph or experiment (JSON)">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0-3-3m3 3 3-3M3 12v2h10v-2"/></svg><span class="label">Import</span>
+      </button>
+      <input type="file" id="file-import" accept="application/json,.json" hidden>
+      <button class="btn btn-ghost" id="btn-export" type="button" title="Export current graph (JSON)">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10V2m0 0L5 5m3-3 3 3M3 12v2h10v-2"/></svg><span class="label">Export</span>
+      </button>
+      <button class="btn btn-ghost" id="btn-save" type="button" title="Save graph to this browser">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h8l2 2v10H3zM5 2v4h5V2M5 14v-4h6v4"/></svg><span class="label">Save</span>
+      </button>
+      <button class="btn btn-ghost btn-icon" id="btn-settings" type="button" aria-label="Settings" title="Settings">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h7M12 4h2M2 8h2M7 8h7M2 12h8M13 12h1"/><circle cx="10.5" cy="4" r="1.5"/><circle cx="5.5" cy="8" r="1.5"/><circle cx="11.5" cy="12" r="1.5"/></svg>
+      </button>
+      <button class="btn btn-ghost btn-icon" id="btn-theme" type="button" aria-label="Switch to light theme" title="Toggle theme">
+        <svg class="icon icon-moon" viewBox="0 0 16 16" aria-hidden="true"><path d="M12.5 10.5A5.5 5.5 0 0 1 5.5 3.5a5.5 5.5 0 1 0 7 7z"/></svg>
+        <svg class="icon icon-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3 3l1 1M12 12l1 1M3 13l1-1M12 4l1-1"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- ========== Workspace: Editor + Debugger ========== -->
+    <section id="view-workspace" class="view workspace" role="tabpanel" aria-labelledby="tab-editor" data-mode="editor">
+      <aside class="sidebar sidebar-left" id="sidebar-left" aria-label="Algorithm and graph tools">
+        <div class="sidebar-scroll">
+          <details class="panel" open>
+            <summary class="panel-title">Algorithm</summary>
+            <div class="panel-body">
+              <label class="field">
+                <span class="field-label">Algorithm</span>
+                <select id="algo-select"></select>
+              </label>
+              <p class="hint" id="algo-desc"></p>
+              <dl class="meta-list" id="algo-meta"></dl>
+              <div class="field-row">
+                <label class="field">
+                  <span class="field-label">Start</span>
+                  <select id="start-select"></select>
+                </label>
+                <label class="field">
+                  <span class="field-label">Destination</span>
+                  <select id="target-select"></select>
+                </label>
+              </div>
+              <div id="algo-options"></div>
+              <div class="btn-row">
+                <button class="btn btn-primary" id="btn-run" type="button">Run &amp; visualize</button>
+                <button class="btn" id="btn-run-instant" type="button" title="Run and jump to the final state">Run to end</button>
+              </div>
+              <div class="msg" id="run-errors" role="alert" hidden></div>
+            </div>
+          </details>
+
+          <details class="panel" open>
+            <summary class="panel-title">Graph tools</summary>
+            <div class="panel-body">
+              <div class="toolbar" role="toolbar" aria-label="Editing tool" id="tool-group">
+                <button class="tool" type="button" data-tool="select" aria-pressed="true" title="Select / move (V)">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2l9 5-4 1 2 5-2 1-2-5-3 3z"/></svg><span>Select</span>
+                </button>
+                <button class="tool" type="button" data-tool="node" aria-pressed="false" title="Add node (N)">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5"/><path d="M8 5.5v5M5.5 8h5"/></svg><span>Node</span>
+                </button>
+                <button class="tool" type="button" data-tool="edge" aria-pressed="false" title="Add edge (E)">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="3.5" cy="12.5" r="2"/><circle cx="12.5" cy="3.5" r="2"/><path d="M5 11l6-6"/></svg><span>Edge</span>
+                </button>
+                <button class="tool" type="button" data-tool="delete" aria-pressed="false" title="Delete (D)">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4h10M6 4V2.5h4V4M4.5 4l.7 9.5h5.6l.7-9.5"/></svg><span>Delete</span>
+                </button>
+              </div>
+              <div class="field-row">
+                <label class="field">
+                  <span class="field-label">New edge weight</span>
+                  <input type="number" id="default-weight" value="1" step="any" inputmode="decimal">
+                </label>
+                <label class="switch field">
+                  <input type="checkbox" id="directed-toggle" role="switch">
+                  <span class="switch-track" aria-hidden="true"></span>
+                  <span class="field-label">Directed</span>
+                </label>
+              </div>
+              <div class="btn-row btn-row-wrap">
+                <button class="btn btn-sm" id="btn-undo" type="button" title="Undo (Ctrl+Z)">Undo</button>
+                <button class="btn btn-sm" id="btn-redo" type="button" title="Redo (Ctrl+Shift+Z)">Redo</button>
+                <button class="btn btn-sm" id="btn-fit" type="button" title="Fit graph to view (F)">Fit</button>
+                <button class="btn btn-sm" id="btn-reset-view" type="button" title="Reset viewport (0)">Reset view</button>
+                <button class="btn btn-sm btn-danger" id="btn-clear" type="button">Clear graph</button>
+              </div>
+            </div>
+          </details>
+
+          <details class="panel" open>
+            <summary class="panel-title">Generate graph</summary>
+            <div class="panel-body" id="gen-form-host"></div>
+          </details>
+
+          <details class="panel">
+            <summary class="panel-title">Experiment</summary>
+            <div class="panel-body">
+              <p class="hint">Send the current graph or settings to an experiment workspace.</p>
+              <div class="btn-col">
+                <button class="btn btn-sm" id="btn-to-race" type="button">Race algorithms on this graph</button>
+                <button class="btn btn-sm" id="btn-to-discovery" type="button">Discover with these generator settings</button>
+                <button class="btn btn-sm" id="btn-to-complexity" type="button">Analyze this algorithm's scaling</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </aside>
+
+      <div class="canvas-area" id="canvas-area">
+        <div class="canvas-toolbar">
+          <button class="btn btn-ghost btn-sm panel-toggle" id="toggle-left" type="button" aria-controls="sidebar-left" aria-expanded="true">Tools</button>
+          <span class="canvas-status" id="canvas-status" aria-live="off"></span>
+          <div class="zoom-controls" role="group" aria-label="Zoom">
+            <button class="btn btn-ghost btn-icon" id="btn-zoom-out" type="button" aria-label="Zoom out">−</button>
+            <output id="zoom-level" class="zoom-level" aria-label="Zoom level">100%</output>
+            <button class="btn btn-ghost btn-icon" id="btn-zoom-in" type="button" aria-label="Zoom in">+</button>
+          </div>
+          <button class="btn btn-ghost btn-sm panel-toggle" id="toggle-right" type="button" aria-controls="sidebar-right" aria-expanded="true">Inspector</button>
+        </div>
+        <canvas id="graph-canvas" class="graph-canvas" tabindex="0" role="img"
+          aria-label="Graph canvas. Use the Structure panel for a text-based view of nodes and edges."
+          aria-describedby="canvas-help"></canvas>
+        <p id="canvas-help" class="visually-hidden">Select tool: drag nodes or empty space to pan; double-click empty space to add a node. Node tool: click to add. Edge tool: click a source then a target node. Delete tool: click an element. Mouse wheel or pinch to zoom. Keyboard: V, N, E, D switch tools; Delete removes the selection; Alt+Arrow keys move the selected node; S and T set start and destination.</p>
+        <div class="legend" id="legend" aria-label="Legend"></div>
+        <div class="empty-hint" id="empty-hint" hidden>
+          <p><strong>Empty graph.</strong> Pick the <em>Node</em> tool and click to add nodes, or generate a graph from the sidebar.</p>
+          <button class="btn btn-primary btn-sm" id="btn-sample" type="button">Load sample graph</button>
+        </div>
+      </div>
+
+      <aside class="sidebar sidebar-right" id="sidebar-right" aria-label="Inspector">
+        <div class="sidebar-scroll">
+          <!-- Editor mode -->
+          <div class="mode-editor">
+            <section class="panel" aria-labelledby="props-title">
+              <h2 class="panel-title" id="props-title">Properties</h2>
+              <div class="panel-body" id="props-body"></div>
+            </section>
+            <section class="panel" aria-labelledby="info-title">
+              <h2 class="panel-title" id="info-title">Graph</h2>
+              <div class="panel-body" id="graph-info"></div>
+            </section>
+            <details class="panel" open>
+              <summary class="panel-title">Structure (accessible list)</summary>
+              <div class="panel-body" id="structure-body"></div>
+            </details>
+          </div>
+          <!-- Debugger mode -->
+          <div class="mode-debugger">
+            <section class="panel" aria-labelledby="step-title">
+              <h2 class="panel-title" id="step-title">Current step</h2>
+              <div class="panel-body" id="step-info" aria-live="polite"></div>
+            </section>
+            <section class="panel" aria-labelledby="stats-title">
+              <h2 class="panel-title" id="stats-title">Execution statistics</h2>
+              <div class="panel-body" id="stats-body"></div>
+            </section>
+            <section class="panel" aria-labelledby="inspector-title">
+              <h2 class="panel-title" id="inspector-title">Algorithm state</h2>
+              <div class="panel-body" id="inspector-body"></div>
+            </section>
+            <section class="panel" aria-labelledby="pseudo-title">
+              <h2 class="panel-title" id="pseudo-title">Pseudocode</h2>
+              <div class="panel-body"><ol class="pseudocode" id="pseudocode" role="list"></ol></div>
+            </section>
+          </div>
+        </div>
+      </aside>
+
+      <footer class="bottom-panel" id="bottom-panel" aria-label="Execution controls">
+        <div class="transport" role="group" aria-label="Playback">
+          <button class="btn btn-icon" id="pb-restart" type="button" aria-label="Restart" title="Restart">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3v4h4M3.5 7A5 5 0 1 1 4 10.5"/></svg>
+          </button>
+          <button class="btn btn-icon" id="pb-back" type="button" aria-label="Step backward" title="Step backward (←)">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3v10M13 3 6 8l7 5z"/></svg>
+          </button>
+          <button class="btn btn-icon btn-primary" id="pb-play" type="button" aria-label="Play" title="Play / pause (Space)">
+            <svg class="icon icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5 13 8l-9 5.5z"/></svg>
+            <svg class="icon icon-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 3v10M11.5 3v10"/></svg>
+          </button>
+          <button class="btn btn-icon" id="pb-forward" type="button" aria-label="Step forward" title="Step forward (→)">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M12 3v10M3 3l7 5-7 5z"/></svg>
+          </button>
+          <button class="btn btn-icon" id="pb-end" type="button" aria-label="Jump to end" title="Jump to end">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3l5 5-5 5zM8 3l5 5-5 5zM14 3v10"/></svg>
+          </button>
+          <button class="btn btn-icon" id="pb-stop" type="button" aria-label="Stop and clear visualization" title="Stop">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="3.5" width="9" height="9" rx="1"/></svg>
+          </button>
+        </div>
+        <div class="timeline">
+          <label class="visually-hidden" for="pb-timeline">Execution timeline</label>
+          <input type="range" id="pb-timeline" min="-1" max="0" value="-1" step="1">
+          <span class="timeline-label mono" id="pb-label">No trace</span>
+        </div>
+        <label class="speed">
+          <span class="field-label">Speed</span>
+          <input type="range" id="pb-speed" min="0" max="100" value="40" aria-valuetext="8 steps per second">
+          <span class="mono speed-value" id="pb-speed-value">8/s</span>
+        </label>
+        <div class="bottom-msg" id="bottom-msg" role="status" aria-live="polite"></div>
+      </footer>
+    </section>
+
+    <!-- ========== Algorithm Race ========== -->
+    <section id="view-race" class="view page" role="tabpanel" aria-labelledby="tab-race" hidden>
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Algorithm Race</h1>
+          <p class="page-sub">Run two compatible algorithms on identical, immutable copies of the current graph.</p>
+        </div>
+      </div>
+      <form class="config-bar" id="race-form" novalidate></form>
+      <div class="msg" id="race-errors" role="alert" hidden></div>
+      <div class="race-arena" id="race-arena"></div>
+      <div class="race-transport" id="race-transport"></div>
+      <section class="card" aria-labelledby="race-metrics-title">
+        <div class="card-head">
+          <h2 class="card-title" id="race-metrics-title">Comparison</h2>
+          <div class="btn-row">
+            <button class="btn btn-sm" type="button" id="race-export" disabled>Export JSON</button>
+            <button class="btn btn-sm" type="button" id="race-save" disabled>Save experiment</button>
+          </div>
+        </div>
+        <div class="table-scroll" id="race-metrics"></div>
+        <p class="hint" id="race-note"></p>
+      </section>
+    </section>
+
+    <!-- ========== Discovery Mode ========== -->
+    <section id="view-discovery" class="view page" role="tabpanel" aria-labelledby="tab-discovery" hidden>
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Discovery Mode</h1>
+          <p class="page-sub">Automatically generate inputs and search for graphs that expose the largest difference between two algorithms.</p>
+        </div>
+      </div>
+      <div class="split">
+        <form class="card form-card" id="discovery-form" novalidate></form>
+        <div class="split-main">
+          <section class="card" aria-labelledby="disc-progress-title">
+            <div class="card-head"><h2 class="card-title" id="disc-progress-title">Search progress</h2></div>
+            <div id="discovery-progress"></div>
+          </section>
+          <section class="card" aria-labelledby="disc-result-title">
+            <div class="card-head">
+              <h2 class="card-title" id="disc-result-title">Most interesting case found</h2>
+              <div class="btn-row">
+                <button class="btn btn-sm" type="button" id="disc-open" disabled>Open in editor</button>
+                <button class="btn btn-sm" type="button" id="disc-race" disabled>Race on this graph</button>
+                <button class="btn btn-sm" type="button" id="disc-export" disabled>Export JSON</button>
+                <button class="btn btn-sm" type="button" id="disc-save" disabled>Save</button>
+              </div>
+            </div>
+            <div id="discovery-result"><p class="hint">Configure a search and press <strong>Start search</strong>.</p></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Complexity Analyzer ========== -->
+    <section id="view-complexity" class="view page" role="tabpanel" aria-labelledby="tab-complexity" hidden>
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Complexity Analyzer</h1>
+          <p class="page-sub">Measure how running time and operation counts grow with input size.</p>
+        </div>
+      </div>
+      <div class="split">
+        <form class="card form-card" id="complexity-form" novalidate></form>
+        <div class="split-main">
+          <section class="card" aria-labelledby="cx-chart-title">
+            <div class="card-head">
+              <h2 class="card-title" id="cx-chart-title">Measurements</h2>
+              <div class="btn-row" id="cx-chart-controls"></div>
+            </div>
+            <div id="complexity-progress"></div>
+            <div class="chart-host" id="complexity-chart"></div>
+            <div id="complexity-detail" class="detail-box" aria-live="polite"></div>
+          </section>
+          <section class="card" aria-labelledby="cx-table-title">
+            <div class="card-head">
+              <h2 class="card-title" id="cx-table-title">Summary by input size</h2>
+              <div class="btn-row">
+                <button class="btn btn-sm" type="button" id="cx-export-csv" disabled>Export CSV</button>
+                <button class="btn btn-sm" type="button" id="cx-export-json" disabled>Export JSON</button>
+                <button class="btn btn-sm" type="button" id="cx-save" disabled>Save</button>
+              </div>
+            </div>
+            <div class="table-scroll" id="complexity-table"></div>
+            <p class="hint" id="complexity-note"></p>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Saved ========== -->
+    <section id="view-saved" class="view page" role="tabpanel" aria-labelledby="tab-saved" hidden>
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Saved Experiments</h1>
+          <p class="page-sub" id="saved-sub">Graphs and experiments stored locally in this browser (IndexedDB). Nothing leaves your device.</p>
+        </div>
+      </div>
+      <section class="card" aria-labelledby="saved-graphs-title">
+        <div class="card-head"><h2 class="card-title" id="saved-graphs-title">Graphs</h2></div>
+        <div class="table-scroll" id="saved-graphs"></div>
+      </section>
+      <section class="card" aria-labelledby="saved-exp-title">
+        <div class="card-head"><h2 class="card-title" id="saved-exp-title">Experiments</h2></div>
+        <div class="table-scroll" id="saved-experiments"></div>
+      </section>
+    </section>
+
+    <!-- ========== Help ========== -->
+    <section id="view-help" class="view page help" role="tabpanel" aria-labelledby="tab-help" hidden>
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Documentation</h1>
+          <p class="page-sub">How AlgoForge works, keyboard shortcuts, algorithms and methodology.</p>
+        </div>
+      </div>
+      <div id="help-body" class="help-body"></div>
+    </section>
+  </main>
+
+  <!-- Settings dialog -->
+  <dialog id="settings-dialog" class="dialog" aria-labelledby="settings-title">
+    <form method="dialog" id="settings-form">
+      <header class="dialog-head">
+        <h2 id="settings-title">Settings</h2>
+        <button class="btn btn-ghost btn-icon" value="cancel" aria-label="Close settings">✕</button>
+      </header>
+      <div class="dialog-body" id="settings-body"></div>
+      <footer class="dialog-foot">
+        <button class="btn" type="button" id="settings-reset">Reset to defaults</button>
+        <button class="btn btn-primary" value="ok">Done</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Generic prompt dialog -->
+  <dialog id="prompt-dialog" class="dialog dialog-sm" aria-labelledby="prompt-title">
+    <form method="dialog" id="prompt-form">
+      <header class="dialog-head"><h2 id="prompt-title">Name</h2></header>
+      <div class="dialog-body">
+        <label class="field"><span class="field-label" id="prompt-label">Name</span><input type="text" id="prompt-input" maxlength="120" autocomplete="off"></label>
+      </div>
+      <footer class="dialog-foot">
+        <button class="btn" value="cancel" formnovalidate>Cancel</button>
+        <button class="btn btn-primary" value="ok" id="prompt-ok">OK</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+  <div class="visually-hidden" id="announcer" role="status" aria-live="polite"></div>
+  <noscript><p class="noscript">AlgoForge requires JavaScript. Run it from a local web server — see README.md.</p></noscript>
+</body>
+</html>
