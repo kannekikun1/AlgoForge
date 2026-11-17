@@ -1,0 +1,9 @@
+- { name: bug, color: d73a4a, description: Something is not working }
+- { name: enhancement, color: a2eeef, description: New feature or request }
+- { name: documentation, color: 0075ca, description: Documentation improvements }
+- { name: good first issue, color: 7057ff, description: Good for newcomers }
+- { name: help wanted, color: 008672, description: Extra attention is needed }
+- { name: algorithm, color: 5319e7, description: Algorithm implementations }
+- { name: performance, color: fbca04, description: Speed or memory }
+- { name: accessibility, color: 1d76db, description: a11y }
+- { name: testing, color: c2e0c6, description: Tests and CI }
