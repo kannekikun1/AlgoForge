@@ -1,0 +1,49 @@
+@media (max-width: 1280px) {
+  :root { --left-w: 264px; --right-w: 300px; }
+  .topbar-actions .label { display: none; }
+  .topbar-actions .btn { width: 32px; padding: 0; }
+}
+
+@media (max-width: 1080px) {
+  /* Sidebars become overlay drawers over the canvas. */
+  .workspace { grid-template-columns: 0 minmax(0, 1fr) 0 !important; }
+  .workspace .sidebar {
+    position: absolute; top: 0; bottom: 0; z-index: var(--z-overlay);
+    width: min(var(--left-w), 86vw); box-shadow: var(--shadow);
+  }
+  html[data-ready="true"] .workspace .sidebar { transition: transform var(--dur) var(--ease), visibility var(--dur); }
+  .workspace .sidebar-left { left: 0; }
+  .workspace .sidebar-right { right: 0; width: min(var(--right-w), 92vw); }
+  .workspace.left-collapsed .sidebar-left { transform: translateX(-100%); }
+  .workspace.right-collapsed .sidebar-right { transform: translateX(100%); }
+  .workspace { position: relative; }
+  .split { grid-template-columns: 1fr; }
+  .form-card { position: static; }
+}
+
+@media (max-width: 860px) {
+  #view-tabs { display: none; }
+  .views-select-wrap { display: block; }
+  .views-select { height: 32px; width: auto; min-width: 140px; }
+  .brand-version { display: none; }
+  .race-arena { grid-template-columns: 1fr; }
+  .bottom-panel { gap: var(--sp-2); padding: var(--sp-2); }
+  .timeline { order: 3; flex-basis: 100%; }
+  .page { padding: var(--sp-3); }
+  .help-body { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 520px) {
+  .brand-name { display: none; }
+  .speed input { width: 80px; }
+  .legend { display: none; }
+  .field-grid { grid-template-columns: 1fr; }
+  .field-grid .span-2 { grid-column: auto; }
+}
+
+@media (pointer: coarse) {
+  .btn { height: 38px; }
+  .btn-sm { height: 34px; }
+  .btn-icon { width: 38px; }
+  .tool { padding: 10px 2px 8px; }
+}

@@ -1,0 +1,97 @@
+/* Colour themes. All text/background pairs meet WCAG 2.2 AA (≥ 4.5:1 for body text). */
+:root, html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0f14;
+  --bg-elev: #11161d;
+  --bg-elev-2: #171d26;
+  --bg-hover: #1e2631;
+  --bg-active: #243040;
+  --border: #263040;
+  --border-strong: #354255;
+  --text: #e6edf3;
+  --text-dim: #9fadbb;
+  --text-faint: #7d8b99;
+  --accent: #5aa2ff;
+  --accent-strong: #2f7fe6;
+  --accent-text: #08111c;
+  --accent-soft: rgba(90, 162, 255, 0.14);
+  --violet: #b197fc;
+  --ok: #46c36a;
+  --warn: #e3a72f;
+  --err: #ff6b63;
+  --err-soft: rgba(255, 107, 99, 0.14);
+  --warn-soft: rgba(227, 167, 47, 0.14);
+  --ok-soft: rgba(70, 195, 106, 0.14);
+  --focus: #8ec5ff;
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --grid: rgba(148, 163, 184, 0.06);
+
+  /* Graph canvas */
+  --g-canvas: #0b0f14;
+  --g-node: #1a2230;
+  --g-node-stroke: #8b9bb0;
+  --g-node-text: #e6edf3;
+  --g-edge: #4b5a6e;
+  --g-edge-text: #b8c4d0;
+  --g-label-bg: #11161d;
+  --g-discovered: #e3a72f;
+  --g-visited: #5aa2ff;
+  --g-finalized: #2f6fd1;
+  --g-current: #ff9e4a;
+  --g-examined: #e3a72f;
+  --g-tree: #5aa2ff;
+  --g-rejected: #6b7684;
+  --g-path: #46c36a;
+  --g-error: #ff6b63;
+  --g-select: #b197fc;
+  --g-start: #46c36a;
+  --g-target: #ff6b63;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f8fa;
+  --bg-elev: #ffffff;
+  --bg-elev-2: #f0f3f6;
+  --bg-hover: #e8edf2;
+  --bg-active: #dbe5f0;
+  --border: #d5dde5;
+  --border-strong: #b7c3cf;
+  --text: #17202b;
+  --text-dim: #4a5665;
+  --text-faint: #5f6b7a;
+  --accent: #1f6fd6;
+  --accent-strong: #165bb3;
+  --accent-text: #ffffff;
+  --accent-soft: rgba(31, 111, 214, 0.1);
+  --violet: #6e4fd8;
+  --ok: #1a7f37;
+  --warn: #9a6700;
+  --err: #cf222e;
+  --err-soft: rgba(207, 34, 46, 0.08);
+  --warn-soft: rgba(154, 103, 0, 0.1);
+  --ok-soft: rgba(26, 127, 55, 0.1);
+  --focus: #1f6fd6;
+  --shadow: 0 8px 28px rgba(23, 32, 43, 0.15);
+  --grid: rgba(23, 32, 43, 0.05);
+
+  --g-canvas: #fbfcfd;
+  --g-node: #ffffff;
+  --g-node-stroke: #5f6b7a;
+  --g-node-text: #17202b;
+  --g-edge: #a3afbc;
+  --g-edge-text: #3b4655;
+  --g-label-bg: #ffffff;
+  --g-discovered: #b77a00;
+  --g-visited: #1f6fd6;
+  --g-finalized: #174ea6;
+  --g-current: #d9480f;
+  --g-examined: #b77a00;
+  --g-tree: #1f6fd6;
+  --g-rejected: #9aa5b1;
+  --g-path: #1a7f37;
+  --g-error: #cf222e;
+  --g-select: #6e4fd8;
+  --g-start: #1a7f37;
+  --g-target: #cf222e;
+}
