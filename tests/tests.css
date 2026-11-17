@@ -1,0 +1,6 @@
+body { font-family: var(--font-mono); background: var(--bg); color: var(--text); padding: 24px; }
+h1 { font-family: var(--font-ui); font-size: 1.2rem; margin-bottom: 8px; }
+#summary { margin: 8px 0 16px; font-weight: 600; }
+#summary.fail { color: var(--err); }
+#summary.pass { color: var(--ok); }
+pre { white-space: pre-wrap; font-size: 12px; line-height: 1.5; }
